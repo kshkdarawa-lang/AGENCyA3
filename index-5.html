@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AGENCyA3 Store</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f6f7fb;color:#171923}
+header{background:#171923;color:white;position:sticky;top:0;z-index:10}.bar{max-width:1100px;margin:auto;padding:14px;display:flex;gap:12px;align-items:center}
+.logo{font-size:22px;font-weight:800;margin-left:auto}.search{flex:1;max-width:500px;padding:12px 16px;border-radius:12px;border:0}.cart{background:#e8b34b;color:#171923;border:0;padding:11px 15px;border-radius:12px;font-weight:bold}
+.hero{max-width:1100px;margin:20px auto;padding:30px;border-radius:22px;background:linear-gradient(135deg,#171923,#49365d);color:white}
+.hero h1{margin:0 0 8px;font-size:34px}.hero p{color:#ddd}
+.container{max-width:1100px;margin:auto;padding:0 14px 40px}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin:25px 0 12px}
+.categories{display:flex;gap:10px;overflow:auto}.cat{background:white;border:1px solid #e5e7eb;padding:12px 18px;border-radius:14px;white-space:nowrap;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.card{background:white;border-radius:18px;overflow:hidden;border:1px solid #e8e9ee;box-shadow:0 4px 14px #00000008}
+.pic{height:170px;background:#ece7f2;display:flex;align-items:center;justify-content:center;font-size:60px}.body{padding:14px}.name{font-weight:bold;font-size:17px}.price{font-weight:800;margin:10px 0;font-size:19px}.old{text-decoration:line-through;color:#999;font-size:13px;margin-right:6px}
+.buy{width:100%;border:0;border-radius:11px;padding:11px;background:#171923;color:#fff;font-weight:bold;cursor:pointer}
+.panel{display:none;position:fixed;inset:0;background:#0008;z-index:20}.box{background:white;width:min(500px,94%);max-height:90vh;overflow:auto;margin:5vh auto;border-radius:20px;padding:20px}
+.row{display:flex;gap:8px}.row>*{flex:1}input,textarea{width:100%;padding:12px;border:1px solid #ddd;border-radius:11px;margin:6px 0}button{cursor:pointer}
+.close{float:left;border:0;background:#eee;border-radius:10px;padding:8px 12px}.item{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #eee;padding:12px 0}
+.total{font-size:21px;font-weight:bold;margin:16px 0}
+footer{text-align:center;padding:25px;background:#171923;color:#bbb}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}.bar{flex-wrap:wrap}.search{order:3;flex-basis:100%}}
+@media(max-width:430px){.grid{grid-template-columns:1fr 1fr}.pic{height:130px}}
+</style></head>
+<body>
+<header><div class="bar"><div class="logo">AGENCyA3 Store</div><input class="search" id="search" placeholder="ابحث عن منتج..." oninput="render()"><button class="cart" onclick="openCart()">🛒 السلة <span id="count">0</span></button></div></header>
+<section class="hero"><div class="container"><h1>متجرك الإلكتروني</h1><p>منتجات وعروض بأسعار مميزة — اطلب بسهولة من هاتفك.</p></div></section>
+<main class="container">
+<div class="section-title"><h2>الأقسام</h2></div>
+<div class="categories" id="cats"></div>
+<div class="section-title"><h2>المنتجات</h2><span id="result"></span></div>
+<div class="grid" id="products"></div>
+</main>
+<footer>© 2026 AGENCyA3 Store — جميع الحقوق محفوظة</footer>
+
+<div class="panel" id="cartPanel"><div class="box"><button class="close" onclick="closePanel('cartPanel')">✕</button><h2>🛒 سلة المشتريات</h2><div id="cart"></div><div class="total" id="total"></div><button class="buy" onclick="checkout()">إتمام الطلب</button></div></div>
+<div class="panel" id="orderPanel"><div class="box"><button class="close" onclick="closePanel('orderPanel')">✕</button><h2>📦 بيانات الطلب</h2><input id="name" placeholder="الاسم"><input id="phone" placeholder="رقم الهاتف"><textarea id="address" placeholder="العنوان بالتفصيل"></textarea><button class="buy" onclick="submitOrder()">تأكيد الطلب</button></div></div>
+<script>
+const products=[
+{id:1,c:"إلكترونيات",n:"سماعة لاسلكية",p:899,o:1099,e:"🎧"},
+{id:2,c:"إلكترونيات",n:"ساعة ذكية",p:1299,o:1599,e:"⌚"},
+{id:3,c:"إكسسوارات",n:"حافظة هاتف",p:249,o:299,e:"📱"},
+{id:4,c:"إكسسوارات",n:"شاحن سريع",p:399,o:499,e:"🔌"},
+{id:5,c:"منزل",n:"مصباح LED",p:299,o:399,e:"💡"},
+{id:6,c:"منزل",n:"منظم مكتب",p:199,o:249,e:"🗂️"},
+{id:7,c:"ألعاب",n:"ذراع تحكم",p:799,o:999,e:"🎮"},
+{id:8,c:"ألعاب",n:"سماعة ألعاب",p:699,o:899,e:"🕹️"}
+];
+let cat="الكل",cart=JSON.parse(localStorage.cart||"[]");
+function money(x){return x.toLocaleString("ar-EG")+" ج.م"}
+function renderCats(){let cs=["الكل",...new Set(products.map(x=>x.c))];cats.innerHTML=cs.map(x=>`<button class="cat" onclick="cat='${x}';render()">${x}</button>`).join("")}
+function render(){let q=search.value.toLowerCase();let a=products.filter(x=>(cat==="الكل"||x.c===cat)&&x.n.toLowerCase().includes(q));productsEl.innerHTML=a.map(x=>`<article class="card"><div class="pic">${x.e}</div><div class="body"><div class="name">${x.n}</div><div class="price">${money(x.p)} <span class="old">${money(x.o)}</span></div><button class="buy" onclick="add(${x.id})">أضف للسلة</button></div></article>`).join("");result.textContent=a.length+" منتج"}
+const productsEl=document.getElementById("products"),cats=document.getElementById("cats");
+function add(id){let x=cart.find(i=>i.id===id);x?x.q++:cart.push({id,q:1});save();alert("تمت إضافة المنتج إلى السلة")}
+function save(){localStorage.cart=JSON.stringify(cart);count.textContent=cart.reduce((s,x)=>s+x.q,0)}
+function openCart(){cartPanel.style.display="block";let a=cart.map(i=>{let p=products.find(x=>x.id===i.id);return `<div class="item"><span>${p.e} ${p.n} × ${i.q}</span><b>${money(p.p*i.q)}</b></div>`}).join("");document.getElementById("cart").innerHTML=a||"السلة فارغة";document.getElementById("total").textContent="الإجمالي: "+money(cart.reduce((s,i)=>s+products.find(x=>x.id===i.id).p*i.q,0))}
+function closePanel(id){document.getElementById(id).style.display="none"}
+function checkout(){if(!cart.length)return alert("السلة فارغة");closePanel("cartPanel");orderPanel.style.display="block"}
+function submitOrder(){if(!name.value||!phone.value||!address.value)return alert("أكمل بيانات الطلب");alert("تم تسجيل طلبك بنجاح — هذه نسخة تجريبية");cart=[];save();closePanel("orderPanel")}
+renderCats();render();save();
+</script></body></html>

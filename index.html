@@ -1,138 +1,105 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AGENC A3 — صوتك يجمعنا</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#171923">
+<title>AGENCyA3 Store — شحن الكونزات</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#100b11;color:#fff;font-family:Arial,sans-serif}.wrap{max-width:820px;margin:auto;padding:15px}
-.card{background:#211722;border:1px solid #4a304d;border-radius:20px;padding:15px;margin:10px 0}.row{display:flex;gap:6px;flex-wrap:wrap}
-input,button,select{border:0;border-radius:12px;padding:12px;font-size:15px}input,select{background:#342437;color:#fff}input{flex:1;min-width:150px}button{background:#ad8037;color:#fff;font-weight:bold}.dark{background:#463348}.red{background:#873443}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.seat,.user{background:#302033;border-radius:14px;padding:10px}.seat{text-align:center;min-height:90px}.user{display:flex;justify-content:space-between;align-items:center;margin:6px 0}.small{color:#cbbccc;font-size:13px}.hidden{display:none}.msg{background:#342437;border-radius:12px;padding:8px;margin:5px}.me{background:#624b29}.toast{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);background:#e1a84d;color:#181019;padding:10px 16px;border-radius:13px;display:none;z-index:10}
-.warn{background:#3a2815;border:1px solid #8d6a35;color:#f3d59d}.ok{color:#a9e6b0}.music-list{display:grid;gap:8px}.music-item{background:#302033;border-radius:14px;padding:10px}
-</style></head>
-<body><div class="wrap">
-<div class="card"><h1>🎙️ AGENC A3</h1><div class="small">صوتك يجمعنا</div></div>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f6fa;color:#171923}
+header{background:#171923;color:#fff;position:sticky;top:0;z-index:10}.bar{max-width:1050px;margin:auto;padding:13px;display:flex;align-items:center;gap:9px}
+.logo{font-size:21px;font-weight:900;white-space:nowrap}.search{flex:1;padding:11px;border:0;border-radius:11px}.btn{border:0;border-radius:11px;padding:11px 14px;font-weight:bold;cursor:pointer}.gold{background:#e8b34b;color:#171923}.dark{background:#292b38;color:#fff}.container{max-width:1050px;margin:auto;padding:14px}
+.hero{margin:8px 0 18px;border-radius:22px;padding:27px;color:#fff;background:linear-gradient(135deg,#171923,#5b3d6e)}
+.hero h1{margin:0 0 8px}.hero p{margin:0;color:#ddd}
+.section{margin:18px 0}.section h2{margin:0 0 10px}.cats{display:flex;gap:8px;overflow:auto}.cat{border:1px solid #ddd;background:#fff;border-radius:12px;padding:10px 16px;white-space:nowrap;cursor:pointer}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.card{background:#fff;border:1px solid #e5e6eb;border-radius:18px;padding:16px;box-shadow:0 5px 16px #00000009}
+.coin{height:115px;border-radius:15px;background:linear-gradient(135deg,#fff1bc,#e9b13f);display:grid;place-items:center;font-size:55px}.name{font-size:17px;font-weight:800;margin-top:12px}.desc{font-size:12px;color:#777;margin:6px 0}.price{font-size:21px;font-weight:900;margin:10px 0}.old{font-size:12px;color:#999;text-decoration:line-through;margin-right:5px}
+.buy{width:100%;background:#171923;color:#fff;border:0;border-radius:11px;padding:11px;font-weight:bold;cursor:pointer}
+.panel{display:none;position:fixed;inset:0;background:#0008;z-index:30}.box{background:#fff;width:min(510px,94%);max-height:90vh;overflow:auto;margin:5vh auto;border-radius:20px;padding:20px}
+.close{float:left;border:0;border-radius:9px;padding:8px 11px;cursor:pointer}.item{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #eee;padding:12px 0}.total{font-size:21px;font-weight:900;margin:16px 0}
+input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:11px;margin:6px 0}.row{display:flex;gap:8px}.row>*{flex:1}
+.notice{padding:11px;background:#fff7df;border:1px solid #efd48a;border-radius:13px;font-size:13px;margin-bottom:12px}
+footer{text-align:center;padding:25px;background:#171923;color:#bbb;margin-top:30px}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}.logo{font-size:18px}.search{order:3;flex-basis:100%}.bar{flex-wrap:wrap}}
+@media(max-width:430px){.grid{grid-template-columns:1fr 1fr}.card{padding:11px}.coin{height:90px;font-size:43px}}
+</style>
+</head>
+<body>
+<header><div class="bar">
+<div class="logo">AGENCyA3 Store</div>
+<input class="search" id="search" placeholder="ابحث عن باقة..." oninput="render()">
+<button class="btn gold" onclick="openPanel('cartPanel')">🛒 السلة <span id="cartCount">0</span></button>
+</div></header>
 
-<div id="config" class="card hidden">
-<h3>🔗 ربط السيرفر</h3>
-<div class="small">أنت تفتح الواجهة من GitHub Pages. تسجيل الحساب يحتاج رابط السيرفر الخلفي (Node + PostgreSQL).</div>
-<div class="row" style="margin-top:8px"><input id="apiBase" placeholder="https://your-server.example.com"><button onclick="setApi()">حفظ رابط السيرفر</button></div>
-<div class="small" id="apiStatus"></div>
-</div>
+<main class="container">
+<section class="hero"><h1>🪙 متجر شحن الكونزات</h1><p>اشحن حسابك في AGENC A3 واختر الباقة المناسبة لك.</p></section>
+<div class="notice">⚡ هذه نسخة تجريبية للواجهة. الدفع الحقيقي يحتاج ربط بوابة دفع وسيرفر آمن قبل استقبال أموال حقيقية.</div>
 
-<div id="auth" class="card"><h3>🔐 الدخول</h3>
-<div class="row"><input id="username" placeholder="اسم المستخدم"><input id="password" type="password" placeholder="كلمة المرور (6 أحرف+)"></div>
-<button onclick="register()">إنشاء حساب</button><button class="dark" onclick="login()">دخول</button>
-<div id="authHint" class="small" style="margin-top:8px"></div>
-</div>
+<section class="section"><h2>الباقات</h2><div class="cats" id="cats"></div></section>
+<section class="section"><div class="row" style="align-items:center"><h2 style="flex:1">باقات الكونزات</h2><span id="result"></span></div><div class="grid" id="products"></div></section>
+</main>
 
-<div id="app" class="hidden">
-<div class="card"><b>👤 <span id="who"></span></b> — 🪙 <span id="coins">0</span> <button class="red" onclick="logout()">خروج</button></div>
-<div class="card"><div class="row"><input id="room" value="room-1"><button onclick="join()">دخول الغرفة</button><button id="mic" class="dark" disabled onclick="mic()">🎤 الميك</button><button id="hand" class="dark" disabled onclick="hand()">✋ رفع اليد</button></div><div id="status" class="small">جاهز</div>
-<div id="roomMusic" class="card hidden" style="margin:12px 0 0;padding:12px;background:#181119"><h3 style="margin-top:0">🎵 موسيقى الغرفة</h3><div class="small">ارفع أغنية من هاتفك، ثم شغّلها في الغرفة. الملف يُرفع إلى السيرفر ليتمكن أعضاء الغرفة من سماعه.</div><div class="row" style="margin-top:8px"><input id="musicFile" type="file" accept="audio/*" onchange="prepareMusic(this)"><button class="dark" onclick="uploadMusic()">⬆️ تحميل للهاتف/السيرفر</button></div><div id="musicName" class="small" style="margin-top:6px"></div><audio id="player" controls preload="metadata" style="width:100%;margin-top:8px"></audio><div class="row" style="margin-top:8px"><button onclick="playRoomMusic()">▶️ تشغيل في الغرفة</button><button class="dark" onclick="pauseRoomMusic()">⏸️ إيقاف</button></div><div id="musicStatus" class="small" style="margin-top:6px">لم يتم اختيار أغنية</div></div></div>
-<div class="card"><b>💺 المقاعد</b><div id="seats" class="grid"></div></div>
-<div class="card"><b>👥 الأعضاء</b><div id="users"></div></div>
-<div class="card"><b>🎁 هدية</b><div class="row"><select id="gift"><option value="🌹|10">🌹 10</option><option value="💎|100">💎 100</option><option value="👑|500">👑 500</option><option value="🚀|1000">🚀 1000</option></select><input id="receiver" placeholder="معرف المستقبل"><button onclick="sendGift()">إرسال</button></div></div>
-<div class="card"><b>👫 الأصدقاء</b><div class="row"><input id="friend" placeholder="معرف المستخدم"><button onclick="addFriend()">إضافة</button></div><div id="friends"></div></div>
-<div class="card"><b>💬 الرسائل الخاصة</b><div class="row"><input id="chatId" placeholder="معرف المستخدم"><input id="body" placeholder="الرسالة"><button onclick="sendMessage()">إرسال</button></div><div id="messages"></div></div>
-<div class="card"><b>🎮 لعبة سريعة</b><div class="row"><button onclick="game()">🎲 ارمي النرد</button><span id="gameResult" class="small"></span></div></div>
-</div></div><div id="toast" class="toast"></div>
+<footer>© 2026 AGENCyA3 — صوتك يجمعنا</footer>
+
+<div class="panel" id="cartPanel"><div class="box">
+<button class="close" onclick="closePanel('cartPanel')">✕</button><h2>🛒 السلة</h2><div id="cart"></div><div class="total" id="total"></div>
+<button class="btn dark" style="width:100%" onclick="openCheckout()">متابعة الشراء</button>
+</div></div>
+
+<div class="panel" id="checkoutPanel"><div class="box">
+<button class="close" onclick="closePanel('checkoutPanel')">✕</button><h2>💳 بيانات الشحن</h2>
+<p style="color:#666;font-size:13px">أدخل معرف حسابك داخل التطبيق لاستلام الكونزات.</p>
+<input id="uid" placeholder="معرف الحساب داخل AGENC A3">
+<input id="phone" placeholder="رقم الهاتف">
+<select id="payment"><option>اختيار طريقة الدفع</option><option>دفع إلكتروني — سيتم ربطه لاحقًا</option><option>تحويل يدوي — تجريبي</option></select>
+<button class="btn gold" style="width:100%;margin-top:8px" onclick="submitOrder()">تأكيد الطلب</button>
+<div id="orderMsg" style="margin-top:10px"></div>
+</div></div>
 
 <script>
-let token=localStorage.a3token||"",uid="",ws=null,stream=null,users=[],pcs=new Map();
-const $=id=>document.getElementById(id);
-const toast=t=>{$("toast").textContent=t;$("toast").style.display="block";setTimeout(()=>$("toast").style.display="none",1800)};
-let API=(localStorage.a3api||"").replace(/\/+$/,"");
-if(!API && location.hostname.includes("github.io")) $("config").classList.remove("hidden");
-if(API) $("apiBase").value=API;
-
-function setApi(){
-  API=$("apiBase").value.trim().replace(/\/+$/,"");
-  if(!/^https?:\/\//i.test(API)) return toast("أدخل رابط السيرفر كاملًا مثل https://...");
-  localStorage.a3api=API;
-  $("apiStatus").textContent="تم حفظ رابط السيرفر";
-  toast("تم حفظ رابط السيرفر");
+const products=[
+{id:1,n:"1,000 كونز",c:"اقتصادية",coins:1000,p:25,old:30,e:"🪙"},
+{id:2,n:"5,000 كونز",c:"اقتصادية",coins:5000,p:100,old:125,e:"🪙"},
+{id:3,n:"10,000 كونز",c:"شعبية",coins:10000,p:180,old:220,e:"💰"},
+{id:4,n:"25,000 كونز",c:"شعبية",coins:25000,p:400,old:500,e:"💰"},
+{id:5,n:"50,000 كونز",c:"مميزة",coins:50000,p:750,old:900,e:"💎"},
+{id:6,n:"100,000 كونز",c:"مميزة",coins:100000,p:1400,old:1700,e:"💎"},
+{id:7,n:"250,000 كونز",c:"VIP",coins:250000,p:3200,old:3800,e:"👑"},
+{id:8,n:"500,000 كونز",c:"VIP",coins:500000,p:6000,old:7200,e:"👑"}
+];
+let active="الكل", cart=[];
+function render(){
+ const q=document.getElementById("search").value.trim().toLowerCase();
+ const list=products.filter(x=>(active==="الكل"||x.c===active)&&(!q||x.n.toLowerCase().includes(q)||x.c.toLowerCase().includes(q)));
+ document.getElementById("products").innerHTML=list.map(x=>`<div class="card">
+ <div class="coin">${x.e}</div><div class="name">${x.n}</div><div class="desc">شحن ${x.coins.toLocaleString()} كونز لحسابك</div>
+ <div class="price">${x.p.toLocaleString()} جنيه <span class="old">${x.old.toLocaleString()} جنيه</span></div>
+ <button class="buy" onclick="add(${x.id})">إضافة للسلة</button></div>`).join("");
+ document.getElementById("result").textContent=`${list.length} باقات`;
 }
-function endpoint(path){return (API||"")+path}
-async function api(url,opt={}){
-  opt.headers={...(opt.headers||{}),"Content-Type":"application/json"};
-  if(token) opt.headers.Authorization="Bearer "+token;
-  let r;
-  try{r=await fetch(endpoint(url),opt)}catch(e){throw Error("تعذر الاتصال بالسيرفر. تأكد من رابط السيرفر وHTTPS.")}
-  const text=await r.text(); let d;
-  try{d=JSON.parse(text)}catch(e){throw Error("السيرفر أعاد صفحة HTML بدل JSON. رابط الـAPI غير صحيح أو السيرفر غير متصل.")}
-  if(!r.ok)throw Error(d.error||"خطأ");
-  return d
+function cats(){
+ const cs=["الكل",...new Set(products.map(x=>x.c))];
+ document.getElementById("cats").innerHTML=cs.map(c=>`<button class="cat" onclick="active='${c}';render()">${c}</button>`).join("");
 }
-function save(d){token=d.token;uid=d.user.id;localStorage.a3token=token;$("who").textContent=d.user.username;$("coins").textContent=d.user.coins;$("auth").classList.add("hidden");$("app").classList.remove("hidden");friends()}
-async function register(){try{let d=await api("/api/register",{method:"POST",body:JSON.stringify({username:$("username").value,password:$("password").value})});save(d)}catch(e){toast(e.message)}}
-async function login(){try{let d=await api("/api/login",{method:"POST",body:JSON.stringify({username:$("username").value,password:$("password").value})});save(d)}catch(e){toast(e.message)}}
-async function me(){try{const d=await api("/api/me");save({user:d.user,token})}catch{}}
-function logout(){localStorage.removeItem("a3token");location.reload()}
-async function friends(){try{let f=await api("/api/friends");$("friends").innerHTML=f.map(x=>`${esc(x.username)} <small>${esc(x.id)}</small>`).join("<br>")}catch{}}
-async function addFriend(){try{await api("/api/friends/"+$("friend").value,{method:"POST"});toast("تمت الإضافة");friends()}catch(e){toast(e.message)}}
-async function sendMessage(){try{await api("/api/messages/"+$("chatId").value,{method:"POST",body:JSON.stringify({body:$("body").value})});$("body").value="";loadMessages()}catch(e){toast(e.message)}}
-async function loadMessages(){try{let m=await api("/api/messages/"+$("chatId").value);$("messages").innerHTML=m.map(x=>`<div class="msg ${x.sender_id===uid?"me":""}">${esc(x.body)}</div>`).join("")}catch{}}
-async function sendGift(){try{let [gift,cost]=$("gift").value.split("|");await api("/api/gifts",{method:"POST",body:JSON.stringify({receiver_id:$("receiver").value,gift,cost:+cost})});let d=await api("/api/me");$("coins").textContent=d.user.coins;toast("تم إرسال الهدية")}catch(e){toast(e.message)}}
-async function game(){let n=Math.floor(Math.random()*6)+1,r=n===6?100:n===5?50:10;try{let d=await api("/api/games/reward",{method:"POST",body:JSON.stringify({reward:r})});$("coins").textContent=d.coins;$("gameResult").textContent=`🎲 ${n} — +${r} عملة`}catch(e){toast(e.message)}}
-function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
-function wsurl(){let base=API||location.origin;let u=new URL(base);u.protocol=u.protocol==="https:"?"wss:":"ws:";return u.toString().replace(/\/$/,"")}
-function join(){if(ws)return;if(!token)return toast("سجل الدخول أولًا");ws=new WebSocket(wsurl());ws.onopen=()=>ws.send(JSON.stringify({type:"join",roomId:$("room").value,token}));ws.onmessage=async e=>{let m=JSON.parse(e.data);if(m.type==="state"){users=m.room;render();$("mic").disabled=false;$("hand").disabled=false;$("status").textContent="متصل بالغرفة";$("roomMusic").classList.remove("hidden")}if(m.type==="error")toast(m.message);if(m.type==="removed"){toast("تم إخراجك");ws.close()}if(m.type==="offer"){let p=await peer(m.from,false);await p.setRemoteDescription(m.sdp);let a=await p.createAnswer();await p.setLocalDescription(a);ws.send(JSON.stringify({type:"answer",to:m.from,sdp:p.localDescription}))}if(m.type==="answer"){let p=pcs.get(m.from);if(p)await p.setRemoteDescription(m.sdp)}if(m.type==="ice"){let p=pcs.get(m.from);if(p&&m.candidate)try{await p.addIceCandidate(m.candidate)}catch{}}if(m.type==="music_set"){setRoomMusic(m.url,m.name)}if(m.type==="music_control"){handleRoomMusicControl(m)}};ws.onclose=()=>{$("status").textContent="انقطع الاتصال";$("roomMusic").classList.add("hidden");ws=null}}
-function render(){let self=users.find(x=>x.id===uid);$("seats").innerHTML="";for(let i=0;i<8;i++){let u=users.find(x=>x.seat===i),d=document.createElement("div");d.className="seat";d.innerHTML=u?`🎙️<br>${esc(u.name)}<br>${u.muted?"🔇":"🔊"}`:`💺<br>مقعد ${i+1}`;d.onclick=()=>ws&&ws.send(JSON.stringify({type:"seat",seat:u?null:i}));$("seats").appendChild(d)}$("users").innerHTML=users.map(u=>`<div class=user><span>${u.host?"👑 ":""}${esc(u.name)}<br><small>${u.seat===null?"مستمع":"مقعد "+(u.seat+1)} ${u.hand?"✋":""}</small></span>${self?.host&&u.id!==uid?`<button onclick="mod('${u.id}','mute')">🔇</button><button onclick="mod('${u.id}','remove')">🚫</button>`:""}</div>`).join("")}
-function mod(id,action){ws.send(JSON.stringify({type:"moderate",target:id,action}))}
-async function mic(){try{if(!stream)stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});let t=stream.getAudioTracks()[0];t.enabled=!t.enabled;$("mic").textContent=t.enabled?"🔇 إيقاف":"🎤 تشغيل";ws.send(JSON.stringify({type:"mute",value:!t.enabled}));for(let u of users)if(u.id!==uid)await peer(u.id,true)}catch(e){toast("اسمح للمتصفح باستخدام الميكروفون")}}
-function hand(){let u=users.find(x=>x.id===uid);ws.send(JSON.stringify({type:"hand",value:!u?.hand}))}
-async function peer(id,init){if(pcs.has(id))return pcs.get(id);let p=new RTCPeerConnection({iceServers:[{urls:"stun:stun.l.google.com:19302"}]});pcs.set(id,p);stream?.getTracks().forEach(t=>p.addTrack(t,stream));p.onicecandidate=e=>e.candidate&&ws.send(JSON.stringify({type:"ice",to:id,candidate:e.candidate}));p.ontrack=e=>{let a=document.getElementById("a"+id);if(!a){a=document.createElement("audio");a.id="a"+id;a.autoplay=true;document.body.appendChild(a)}a.srcObject=e.streams[0]};if(init){let o=await p.createOffer();await p.setLocalDescription(o);ws.send(JSON.stringify({type:"offer",to:id,sdp:p.localDescription}))}return p}
-let selectedMusicFile=null;
-function prepareMusic(input){
-  const f=input.files?.[0];
-  if(!f)return;
-  if(f.size>25*1024*1024)return toast("الحد الأقصى للأغنية 25 ميجابايت");
-  selectedMusicFile=f;
-  $("musicName").textContent=`🎵 ${f.name} — ${(f.size/1024/1024).toFixed(1)} MB`;
-  $("player").src=URL.createObjectURL(f);
-  $("musicStatus").textContent="الأغنية جاهزة. اضغط تحميل للسيرفر ثم تشغيل في الغرفة.";
+function add(id){cart.push(id);updateCart();openPanel("cartPanel")}
+function updateCart(){
+ document.getElementById("cartCount").textContent=cart.length;
+ const items=cart.map(id=>products.find(x=>x.id===id));
+ document.getElementById("cart").innerHTML=items.length?items.map((x,i)=>`<div class="item"><span>${x.e} ${x.n}</span><b>${x.p.toLocaleString()} ج</b><button onclick="removeItem(${i})">✕</button></div>`).join(""):"السلة فارغة";
+ const total=items.reduce((s,x)=>s+x.p,0); document.getElementById("total").textContent=`الإجمالي: ${total.toLocaleString()} جنيه`;
 }
-async function uploadMusic(){
-  if(!ws)return toast("ادخل الغرفة أولًا");
-  if(!selectedMusicFile)return toast("اختر أغنية من الهاتف أولًا");
-  if(!API)return toast("ضع رابط السيرفر أولًا في إعدادات ربط السيرفر");
-  try{
-    $("musicStatus").textContent="جاري رفع الأغنية...";
-    const fd=new FormData(); fd.append("music",selectedMusicFile);
-    const h={}; if(token)h.Authorization="Bearer "+token;
-    const r=await fetch(endpoint("/api/music/upload"),{method:"POST",headers:h,body:fd});
-    const text=await r.text(); let d; try{d=JSON.parse(text)}catch{throw Error("السيرفر أعاد HTML بدل JSON")}
-    if(!r.ok)throw Error(d.error||"تعذر رفع الأغنية");
-    const full=new URL(d.url,API).href;
-    $("player").src=full;
-    $("musicStatus").textContent="تم رفع الأغنية. اضغط تشغيل في الغرفة.";
-    ws.send(JSON.stringify({type:"music_set",url:full,name:d.name}));
-    toast("تم تحميل الأغنية");
-  }catch(e){$("musicStatus").textContent=e.message;toast(e.message)}
+function removeItem(i){cart.splice(i,1);updateCart()}
+function openPanel(id){document.getElementById(id).style.display="block"}
+function closePanel(id){document.getElementById(id).style.display="none"}
+function openCheckout(){if(!cart.length){alert("أضف باقة أولاً");return}closePanel("cartPanel");openPanel("checkoutPanel")}
+function submitOrder(){
+ const uid=document.getElementById("uid").value.trim(), phone=document.getElementById("phone").value.trim(), pay=document.getElementById("payment").value;
+ if(!uid||!phone||pay==="اختيار طريقة الدفع"){document.getElementById("orderMsg").textContent="أكمل بيانات الطلب أولاً.";return}
+ const order="A3-"+Date.now().toString().slice(-8);
+ localStorage.setItem("lastOrder",JSON.stringify({order,uid,phone,pay,items:cart}));
+ document.getElementById("orderMsg").innerHTML=`<b>تم إنشاء الطلب التجريبي ${order} ✓</b><br>سيتم ربط التنفيذ الفعلي بالسيرفر وبوابة الدفع.`;
+ cart=[];updateCart();
 }
-function playRoomMusic(){
-  if(!ws)return toast("ادخل الغرفة أولًا");
-  if(!$('player').src)return toast("اختر وارفع أغنية أولًا");
-  const time=$('player').currentTime||0;
-  $('player').play().catch(()=>{});
-  ws.send(JSON.stringify({type:"music_control",action:"play",time}));
-}
-function pauseRoomMusic(){
-  if(!ws)return toast("ادخل الغرفة أولًا");
-  const time=$('player').currentTime||0; $('player').pause();
-  ws.send(JSON.stringify({type:"music_control",action:"pause",time}));
-}
-function setRoomMusic(url,name){
-  $('player').src=url; $('player').load(); $('musicName').textContent=`🎵 ${name||"موسيقى الغرفة"}`; $('musicStatus').textContent="تم تحميل موسيقى الغرفة. اضغط تشغيل.";
-}
-function handleRoomMusicControl(m){
-  const p=$('player');
-  if(!p.src)return;
-  if(Number.isFinite(m.time))p.currentTime=m.time;
-  if(m.action==="play")p.play().catch(()=>{});
-  if(m.action==="pause")p.pause();
-  if(m.action==="stop"){p.pause();p.currentTime=0;}
-}
-if(token && API)me();
-</script></body></html>
+cats();render();updateCart();
+</script>
+</body></html>
